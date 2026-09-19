@@ -669,7 +669,17 @@ Object.keys(PRICING).forEach(key => {
 // -------------------------------------------------------------------------
 const providerGrid = document.getElementById('providerGrid');
 
-Object.entries(PRICING).forEach(([key, provider]) => {
+// If <body data-featured="openai"> is set, that provider's card renders first.
+const featured = document.body.dataset.featured;
+let providerEntries = Object.entries(PRICING);
+if (featured && PRICING[featured]) {
+  providerEntries = [
+    [featured, PRICING[featured]],
+    ...providerEntries.filter(([k]) => k !== featured)
+  ];
+}
+
+providerEntries.forEach(([key, provider]) => {
   const card = document.createElement('div');
   card.className = 'provider-card';
   card.innerHTML = `
