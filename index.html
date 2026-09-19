@@ -3,17 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AI Token Calculator — Token Estimator & Cost Calculator for GPT, Claude, Gemini, Grok & DeepSeek</title>
-<meta name="description" content="Free AI token calculator and cost estimator. Paste your prompt to count tokens and compare API pricing across OpenAI GPT, Anthropic Claude, Google Gemini, Perplexity, DeepSeek and Grok — instantly, in your browser, no signup.">
+<title>AI Token Calculator — Estimate GPT, Claude, Gemini & DeepSeek Costs</title>
+<meta name="description" content="Paste your prompt and instantly see token counts and API costs across OpenAI, Anthropic, Gemini, Perplexity, DeepSeek and Grok. Free, runs in your browser, no signup.">
 <link rel="canonical" href="https://your-domain.com/">
 <meta property="og:type" content="website">
-<meta property="og:title" content="AI Token Calculator — Token Estimator & Cost Calculator for 6 AI Providers">
-<meta property="og:description" content="Paste your prompt and instantly see token counts and AI API costs across OpenAI, Anthropic, Gemini, Perplexity, DeepSeek and Grok.">
+<meta property="og:title" content="AI Token Calculator — Estimate GPT, Claude, Gemini & DeepSeek Costs">
+<meta property="og:description" content="Paste your prompt and instantly see token counts and API costs across six major AI providers.">
 <meta property="og:url" content="https://your-domain.com/">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="AI Token Calculator — Token Estimator & Cost Calculator">
-<meta name="twitter:description" content="Free tool to count tokens and estimate AI API costs across 6 major providers, right in your browser.">
 <meta name="theme-color" content="#FBFAF7">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232F6F4F'/%3E%3Crect x='9' y='10' width='14' height='3' rx='1.5' fill='%23FBFAF7'/%3E%3Crect x='9' y='15' width='10' height='3' rx='1.5' fill='%23FBFAF7'/%3E%3Crect x='9' y='20' width='6' height='3' rx='1.5' fill='%23FBFAF7'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -22,13 +21,12 @@
   "@context": "https://schema.org",
   "@type": "FAQPage",
   "mainEntity": [
-    {"@type":"Question","name":"What does this AI token calculator actually calculate?","acceptedAnswer":{"@type":"Answer","text":"It counts the tokens in the text you paste, estimates how many tokens a typical reply will use, and multiplies both by each provider's published per-token rate to show an approximate API cost. It works as both a token estimator and a cost calculator in one tool."}},
+    {"@type":"Question","name":"What does this tool actually calculate?","acceptedAnswer":{"@type":"Answer","text":"It counts the tokens in the text you paste, estimates how many tokens a typical reply will use, and multiplies both by each provider's published per-token rate to show an approximate API cost."}},
     {"@type":"Question","name":"What is a token?","acceptedAnswer":{"@type":"Answer","text":"A token is a chunk of text a language model reads at a time — often a word, part of a word, or a punctuation mark. English text averages roughly four characters per token."}},
     {"@type":"Question","name":"How accurate is the token count?","acceptedAnswer":{"@type":"Answer","text":"OpenAI counts are computed with the same tokenizer OpenAI's models use, so they're exact. Other providers don't publish a browser-usable tokenizer, so those counts are close estimates based on character density."}},
     {"@type":"Question","name":"Why does output cost more than input?","acceptedAnswer":{"@type":"Answer","text":"Generating new text is more computationally expensive than reading existing text, so most providers price output tokens several times higher than input tokens."}},
-    {"@type":"Question","name":"How current is the AI token price data?","acceptedAnswer":{"@type":"Answer","text":"Rates are entered manually from each provider's official pricing documentation and reviewed periodically. Providers change pricing with little notice — for DeepSeek in particular, rates can even shift between peak and off-peak hours — so always confirm against the provider's own pricing page before budgeting a production workload."}},
-    {"@type":"Question","name":"Does this work for code or non-English text?","acceptedAnswer":{"@type":"Answer","text":"Yes, you can paste anything. Code and non-English text often tokenize less predictably than English prose, so treat the estimate as directional rather than exact for those cases."}},
-    {"@type":"Question","name":"What's the difference between a token calculator and a token estimator?","acceptedAnswer":{"@type":"Answer","text":"In practice the terms are used interchangeably. This tool doubles as both: it gives an exact token calculator for OpenAI text and a character-based token estimator for every other provider, then converts either figure into an AI cost estimate."}}
+    {"@type":"Question","name":"How current is the pricing?","acceptedAnswer":{"@type":"Answer","text":"Rates are entered manually from provider documentation and reviewed periodically. Always confirm against the provider's own pricing page before budgeting a production workload."}},
+    {"@type":"Question","name":"Does this work for code or non-English text?","acceptedAnswer":{"@type":"Answer","text":"Yes, you can paste anything. Code and non-English text often tokenize less predictably than English prose, so treat the estimate as directional rather than exact for those cases."}}
   ]
 }
 </script>
@@ -69,87 +67,322 @@
   .wrap{max-width:1120px; margin:0 auto; padding:0 20px;}
   .wrap-narrow{max-width:760px; margin:0 auto; padding:0 20px;}
 
-  header.site{border-bottom:1px solid var(--line); padding:18px 0;}
+  header.site{
+    border-bottom:1px solid var(--line);
+    padding:18px 0;
+  }
   header.site .wrap{display:flex; align-items:center; justify-content:space-between;}
-  .brand{font-family:var(--serif); font-size:1.15rem; font-weight:600; letter-spacing:0.01em;}
+  .brand{
+    font-family:var(--serif);
+    font-size:1.15rem;
+    font-weight:600;
+    letter-spacing:0.01em;
+  }
   .brand span{color:var(--accent-ink);}
-  nav.site-nav a{color:var(--ink-soft); text-decoration:none; font-size:0.92rem; margin-left:22px;}
+  nav.site-nav a{
+    color:var(--ink-soft);
+    text-decoration:none;
+    font-size:0.92rem;
+    margin-left:22px;
+  }
   nav.site-nav a:hover{color:var(--ink);}
 
+  /* ---------- Hero / tool ---------- */
   .hero{padding:48px 0 8px;}
-  .hero h1{font-family:var(--serif); font-weight:600; font-size:clamp(1.7rem, 3.2vw, 2.5rem); line-height:1.15; margin:0 0 10px; max-width:24ch;}
-  .hero p.lede{color:var(--ink-soft); font-size:1.02rem; max-width:60ch; margin:0 0 18px;}
-  .hero p.lede-sub{color:var(--ink-faint); font-size:0.88rem; max-width:60ch; margin:0 0 30px;}
+  .hero h1{
+    font-family:var(--serif);
+    font-weight:600;
+    font-size:clamp(1.7rem, 3.2vw, 2.5rem);
+    line-height:1.15;
+    margin:0 0 10px;
+    max-width:20ch;
+  }
+  .hero p.lede{
+    color:var(--ink-soft);
+    font-size:1.02rem;
+    max-width:56ch;
+    margin:0 0 30px;
+  }
 
-  .tool-card{background:var(--paper-raised); border:1px solid var(--line); border-radius:var(--radius); padding:22px;}
-  .tool-card label.field-label{display:block; font-size:0.82rem; color:var(--ink-soft); margin-bottom:8px;}
-  textarea#promptInput{width:100%; min-height:150px; resize:vertical; border:1px solid var(--line); border-radius:var(--radius); padding:14px; font-family:var(--sans); font-size:0.98rem; color:var(--ink); background:var(--paper);}
+  .tool-card{
+    background:var(--paper-raised);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:22px;
+  }
+  .tool-card label.field-label{
+    display:block;
+    font-size:0.82rem;
+    color:var(--ink-soft);
+    margin-bottom:8px;
+  }
+  textarea#promptInput{
+    width:100%;
+    min-height:150px;
+    resize:vertical;
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:14px;
+    font-family:var(--sans);
+    font-size:0.98rem;
+    color:var(--ink);
+    background:var(--paper);
+  }
   textarea#promptInput:focus{border-color:var(--accent);}
 
-  .stat-row{display:flex; flex-wrap:wrap; gap:10px; margin-top:14px;}
-  .stat{flex:1 1 120px; border:1px solid var(--line); border-radius:var(--radius); padding:10px 12px; background:var(--paper);}
+  .stat-row{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    margin-top:14px;
+  }
+  .stat{
+    flex:1 1 120px;
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:10px 12px;
+    background:var(--paper);
+  }
   .stat .stat-label{font-size:0.74rem; color:var(--ink-soft);}
-  .stat .stat-value{font-family:var(--mono); font-size:1.25rem; font-weight:600; margin-top:2px;}
+  .stat .stat-value{
+    font-family:var(--mono);
+    font-size:1.25rem;
+    font-weight:600;
+    margin-top:2px;
+  }
   .stat .stat-note{font-size:0.68rem; color:var(--ink-faint); margin-top:2px;}
 
-  .preset-row{margin-top:18px; display:flex; flex-wrap:wrap; align-items:center; gap:8px;}
+  .preset-row{
+    margin-top:18px;
+    display:flex;
+    flex-wrap:wrap;
+    align-items:center;
+    gap:8px;
+  }
   .preset-row .field-label{margin:0 10px 0 0; flex-basis:100%;}
-  .preset-chip{font-family:var(--sans); font-size:0.84rem; padding:7px 13px; border-radius:999px; border:1px solid var(--line-strong); background:var(--paper-raised); color:var(--ink-soft); cursor:pointer;}
+  .preset-chip{
+    font-family:var(--sans);
+    font-size:0.84rem;
+    padding:7px 13px;
+    border-radius:999px;
+    border:1px solid var(--line-strong);
+    background:var(--paper-raised);
+    color:var(--ink-soft);
+    cursor:pointer;
+  }
   .preset-chip:hover{border-color:var(--accent);}
-  .preset-chip.active{background:var(--accent-soft); border-color:var(--accent-soft-line); color:var(--accent-ink); font-weight:600;}
-  .preset-custom{display:flex; align-items:center; gap:6px; font-size:0.84rem; color:var(--ink-soft); margin-left:4px;}
-  .preset-custom input{width:80px; font-family:var(--mono); border:1px solid var(--line-strong); border-radius:var(--radius); padding:6px 8px; background:var(--paper-raised); color:var(--ink);}
+  .preset-chip.active{
+    background:var(--accent-soft);
+    border-color:var(--accent-soft-line);
+    color:var(--accent-ink);
+    font-weight:600;
+  }
+  .preset-custom{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    font-size:0.84rem;
+    color:var(--ink-soft);
+    margin-left:4px;
+  }
+  .preset-custom input{
+    width:80px;
+    font-family:var(--mono);
+    border:1px solid var(--line-strong);
+    border-radius:var(--radius);
+    padding:6px 8px;
+    background:var(--paper-raised);
+    color:var(--ink);
+  }
 
-  section.intro-copy{padding:40px 0 8px;}
-  section.intro-copy .wrap-narrow p{color:var(--ink-soft); margin:0 0 14px; max-width:70ch;}
-  section.intro-copy h2{font-family:var(--serif); font-weight:600; font-size:1.3rem; margin:0 0 12px;}
-
+  /* ---------- Provider cards ---------- */
   section.providers{padding:46px 0 8px;}
   .section-head{margin-bottom:22px;}
-  .section-head h2{font-family:var(--serif); font-weight:600; font-size:1.5rem; margin:0 0 6px;}
+  .section-head h2{
+    font-family:var(--serif);
+    font-weight:600;
+    font-size:1.5rem;
+    margin:0 0 6px;
+  }
   .section-head p{color:var(--ink-soft); margin:0; max-width:60ch;}
 
-  .provider-grid{display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:14px;}
-  .provider-card{border:1px solid var(--line); border-radius:var(--radius); background:var(--paper-raised); padding:18px; display:flex; flex-direction:column; gap:12px;}
-  .provider-card .provider-head{display:flex; align-items:center; justify-content:space-between;}
-  .provider-card h3{font-size:1rem; margin:0; font-weight:600;}
-  .provider-badge{width:26px; height:26px; border-radius:50%; background:var(--accent-soft); color:var(--accent-ink); font-family:var(--mono); font-size:0.72rem; font-weight:600; display:flex; align-items:center; justify-content:center; flex-shrink:0;}
-  select.model-select{width:100%; font-family:var(--sans); font-size:0.88rem; padding:9px 10px; border:1px solid var(--line-strong); border-radius:var(--radius); background:var(--paper); color:var(--ink);}
-  .cost-grid{display:grid; grid-template-columns:1fr 1fr; gap:8px;}
-  .cost-cell{border:1px solid var(--line); border-radius:var(--radius); padding:8px 10px;}
+  .provider-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(260px, 1fr));
+    gap:14px;
+  }
+  .provider-card{
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    background:var(--paper-raised);
+    padding:18px;
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+  }
+  .provider-card .provider-head{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+  }
+  .provider-card h3{
+    font-size:1rem;
+    margin:0;
+    font-weight:600;
+  }
+  .provider-badge{
+    width:26px; height:26px;
+    border-radius:50%;
+    background:var(--accent-soft);
+    color:var(--accent-ink);
+    font-family:var(--mono);
+    font-size:0.72rem;
+    font-weight:600;
+    display:flex; align-items:center; justify-content:center;
+  }
+  select.model-select{
+    width:100%;
+    font-family:var(--sans);
+    font-size:0.88rem;
+    padding:9px 10px;
+    border:1px solid var(--line-strong);
+    border-radius:var(--radius);
+    background:var(--paper);
+    color:var(--ink);
+  }
+  .cost-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:8px;
+  }
+  .cost-cell{
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:8px 10px;
+  }
   .cost-cell .cost-label{font-size:0.7rem; color:var(--ink-soft);}
-  .cost-cell .cost-value{font-family:var(--mono); font-size:1.02rem; font-weight:600;}
-  .cost-total{border:1px solid var(--accent-soft-line); background:var(--accent-soft); border-radius:var(--radius); padding:10px 12px; display:flex; align-items:baseline; justify-content:space-between;}
+  .cost-cell .cost-value{
+    font-family:var(--mono);
+    font-size:1.02rem;
+    font-weight:600;
+  }
+  .cost-total{
+    border:1px solid var(--accent-soft-line);
+    background:var(--accent-soft);
+    border-radius:var(--radius);
+    padding:10px 12px;
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+  }
   .cost-total .cost-label{font-size:0.78rem; color:var(--accent-ink);}
-  .cost-total .cost-value{font-family:var(--mono); font-size:1.2rem; font-weight:700; color:var(--accent-ink);}
+  .cost-total .cost-value{
+    font-family:var(--mono);
+    font-size:1.2rem;
+    font-weight:700;
+    color:var(--accent-ink);
+  }
   .provider-meta{font-size:0.72rem; color:var(--ink-faint);}
 
+  /* ---------- Pricing table ---------- */
   section.pricing-table{padding:46px 0 8px;}
   .table-scroll{overflow-x:auto; border:1px solid var(--line); border-radius:var(--radius);}
-  table.rates{width:100%; border-collapse:collapse; font-size:0.86rem; min-width:640px;}
-  table.rates th, table.rates td{text-align:left; padding:10px 14px; border-bottom:1px solid var(--line); white-space:nowrap;}
-  table.rates th{font-weight:600; color:var(--ink-soft); font-size:0.76rem; background:var(--paper);}
+  table.rates{
+    width:100%;
+    border-collapse:collapse;
+    font-size:0.86rem;
+    min-width:640px;
+  }
+  table.rates th, table.rates td{
+    text-align:left;
+    padding:10px 14px;
+    border-bottom:1px solid var(--line);
+    white-space:nowrap;
+  }
+  table.rates th{
+    font-weight:600;
+    color:var(--ink-soft);
+    font-size:0.76rem;
+    background:var(--paper);
+  }
   table.rates td.num{font-family:var(--mono);}
   table.rates tr:last-child td{border-bottom:none;}
   table.rates tbody tr:hover{background:var(--accent-soft);}
-  .provider-group-label{font-weight:600; color:var(--accent-ink);}
-  .rates-note{font-size:0.76rem; color:var(--ink-faint); margin:10px 2px 0;}
+  .provider-group-label{
+    font-weight:600;
+    color:var(--accent-ink);
+  }
 
+  /* ---------- FAQ ---------- */
   section.faq{padding:46px 0 8px;}
-  details.faq-item{border-bottom:1px solid var(--line); padding:14px 0;}
-  details.faq-item summary{cursor:pointer; font-weight:600; font-size:0.98rem; list-style:none; display:flex; align-items:center; justify-content:space-between; gap:12px;}
+  details.faq-item{
+    border-bottom:1px solid var(--line);
+    padding:14px 0;
+  }
+  details.faq-item summary{
+    cursor:pointer;
+    font-weight:600;
+    font-size:0.98rem;
+    list-style:none;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+  }
   details.faq-item summary::-webkit-details-marker{display:none;}
-  details.faq-item summary::after{content:"+"; font-family:var(--mono); font-size:1.1rem; color:var(--ink-soft); flex-shrink:0;}
+  details.faq-item summary::after{
+    content:"+";
+    font-family:var(--mono);
+    font-size:1.1rem;
+    color:var(--ink-soft);
+    flex-shrink:0;
+  }
   details.faq-item[open] summary::after{content:"–";}
-  details.faq-item p{color:var(--ink-soft); margin:10px 0 0; max-width:70ch;}
+  details.faq-item p{
+    color:var(--ink-soft);
+    margin:10px 0 0;
+    max-width:70ch;
+  }
 
-  footer.site{margin-top:60px; border-top:1px solid var(--line); padding:36px 0 40px; background:var(--paper-raised);}
-  .footer-grid{display:grid; grid-template-columns:repeat(auto-fit, minmax(200px,1fr)); gap:26px;}
-  .footer-col h4{font-size:0.8rem; color:var(--ink-soft); margin:0 0 10px; font-weight:600;}
+  /* ---------- Footer ---------- */
+  footer.site{
+    margin-top:60px;
+    border-top:1px solid var(--line);
+    padding:36px 0 40px;
+    background:var(--paper-raised);
+  }
+  .footer-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(200px,1fr));
+    gap:26px;
+  }
+  .footer-col h4{
+    font-size:0.8rem;
+    color:var(--ink-soft);
+    margin:0 0 10px;
+    font-weight:600;
+  }
   .footer-col ul{list-style:none; margin:0; padding:0;}
-  .footer-col li{display:flex; justify-content:space-between; gap:10px; font-size:0.82rem; padding:4px 0; color:var(--ink);}
+  .footer-col li{
+    display:flex;
+    justify-content:space-between;
+    gap:10px;
+    font-size:0.82rem;
+    padding:4px 0;
+    color:var(--ink);
+  }
   .footer-col li span.rate{font-family:var(--mono); color:var(--ink-soft);}
-  .footer-bottom{margin-top:30px; padding-top:18px; border-top:1px solid var(--line); display:flex; flex-wrap:wrap; justify-content:space-between; gap:10px; font-size:0.78rem; color:var(--ink-faint);}
+  .footer-bottom{
+    margin-top:30px;
+    padding-top:18px;
+    border-top:1px solid var(--line);
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:space-between;
+    gap:10px;
+    font-size:0.78rem;
+    color:var(--ink-faint);
+  }
   .footer-bottom a{color:var(--ink-faint); text-decoration:underline;}
 
   @media (max-width:600px){
@@ -164,7 +397,15 @@
 
 <header class="site">
   <div class="wrap">
-    <div class="brand">token<span>math</span></div>
+    <div class="brand">
+      <svg width="26" height="26" viewBox="0 0 32 32" style="vertical-align:-7px; margin-right:8px;">
+        <rect width="32" height="32" rx="7" fill="#2F6F4F"/>
+        <rect x="9" y="10" width="14" height="3" rx="1.5" fill="#FBFAF7"/>
+        <rect x="9" y="15" width="10" height="3" rx="1.5" fill="#FBFAF7"/>
+        <rect x="9" y="20" width="6" height="3" rx="1.5" fill="#FBFAF7"/>
+      </svg>
+      token<span>math</span>
+    </div>
     <nav class="site-nav">
       <a href="#pricing">Pricing</a>
       <a href="#faq">FAQ</a>
@@ -175,9 +416,8 @@
 <main>
   <section class="hero">
     <div class="wrap-narrow">
-      <h1>AI Token Calculator: count tokens &amp; estimate API cost</h1>
-      <p class="lede">Paste a prompt below. This free token estimator gives you an exact token count for OpenAI models and close estimates for every other provider, then compares API cost across six providers at once — GPT, Claude, Gemini, Perplexity, DeepSeek and Grok.</p>
-      <p class="lede-sub">Runs entirely in your browser. Nothing you paste is uploaded or stored.</p>
+      <h1>How many tokens is that, and what will it cost you?</h1>
+      <p class="lede">Paste a prompt below. See the exact token count for OpenAI models and close estimates for everything else, then compare API cost across six providers at once.</p>
 
       <div class="tool-card">
         <label class="field-label" for="promptInput">Your text</label>
@@ -206,25 +446,17 @@
 
         <div class="preset-row">
           <span class="field-label">Expected output size</span>
-          <button class="preset-chip" type="button" data-ratio="0.05">Classification</button>
-          <button class="preset-chip" type="button" data-ratio="0.30">RAG / Q&amp;A</button>
-          <button class="preset-chip active" type="button" data-ratio="0.60">Chat reply</button>
-          <button class="preset-chip" type="button" data-ratio="1.00">Full response</button>
-          <button class="preset-chip" type="button" data-ratio="2.00">Long generation</button>
+          <button class="preset-chip" data-ratio="0.05">Classification</button>
+          <button class="preset-chip" data-ratio="0.30">RAG / Q&amp;A</button>
+          <button class="preset-chip active" data-ratio="0.60">Chat reply</button>
+          <button class="preset-chip" data-ratio="1.00">Full response</button>
+          <button class="preset-chip" data-ratio="2.00">Long generation</button>
           <span class="preset-custom">
             or exact:
             <input type="number" id="customOutput" min="0" step="1" placeholder="tokens">
           </span>
         </div>
       </div>
-    </div>
-  </section>
-
-  <section class="intro-copy">
-    <div class="wrap-narrow">
-      <h2>One AI token price calculator, six providers</h2>
-      <p>Every major AI API bills by the token, but each provider prices input and output differently — and rates change often. Instead of checking six separate pricing pages, use this AI token calculator to see the token count and AI token cost side by side, updated the moment you paste your text.</p>
-      <p>Whether you're sizing a single prompt or budgeting a production workload, the tool below doubles as a token estimator (for quick sizing) and a precise AI token cost calculator (for the actual dollar figure per request).</p>
     </div>
   </section>
 
@@ -241,8 +473,8 @@
   <section class="pricing-table" id="pricing">
     <div class="wrap">
       <div class="section-head">
-        <h2>Current AI token prices, per 1M tokens</h2>
-        <p>Reference table for every model in the calculator above. Figures are USD, sourced from each provider's official pricing documentation.</p>
+        <h2>Current rates, per 1M tokens</h2>
+        <p>Reference table for every model in the calculator above. Figures are USD.</p>
       </div>
       <div class="table-scroll">
         <table class="rates" id="ratesTable">
@@ -259,7 +491,6 @@
           <tbody id="ratesBody"></tbody>
         </table>
       </div>
-      <p class="rates-note">Rates last checked September 2026. DeepSeek runs peak/off-peak pricing (peak: 9am–12pm &amp; 2pm–6pm Beijing time); Gemini 3.1 Pro and select Claude context windows carry a surcharge above their base tier. Always confirm against the provider's live pricing page before budgeting.</p>
     </div>
   </section>
 
@@ -270,8 +501,8 @@
       </div>
 
       <details class="faq-item" open>
-        <summary>What does this AI token calculator actually calculate?</summary>
-        <p>It counts the tokens in the text you paste, estimates how many tokens a typical reply will use based on the output size you pick, and multiplies both by each provider's published per-token rate to show an approximate API cost. It works as both a token estimator and a cost calculator in one tool.</p>
+        <summary>What does this tool actually calculate?</summary>
+        <p>It counts the tokens in the text you paste, estimates how many tokens a typical reply will use based on the output size you pick, and multiplies both by each provider's published per-token rate to show an approximate API cost.</p>
       </details>
       <details class="faq-item">
         <summary>What is a token?</summary>
@@ -286,16 +517,12 @@
         <p>Generating new text takes more computation than reading existing text, so most providers price output tokens several times higher than input tokens — often 3 to 6 times as much on flagship models.</p>
       </details>
       <details class="faq-item">
-        <summary>How current is the AI token price data?</summary>
-        <p>Rates are entered manually from each provider's official pricing documentation and reviewed periodically. Providers change pricing with little notice — DeepSeek in particular shifts rates between peak and off-peak hours — so confirm against the provider's own pricing page before budgeting a production workload.</p>
+        <summary>How current is the pricing?</summary>
+        <p>Rates are entered manually from provider documentation and reviewed periodically. Providers change pricing without much notice, so confirm against the provider's own pricing page before budgeting a production workload.</p>
       </details>
       <details class="faq-item">
         <summary>Does this work for code or non-English text?</summary>
         <p>You can paste anything. Code and non-English text often tokenize less predictably than English prose, so treat the estimate as directional rather than exact for those cases.</p>
-      </details>
-      <details class="faq-item">
-        <summary>What's the difference between a token calculator and a token estimator?</summary>
-        <p>In practice the terms are used interchangeably. This tool doubles as both: an exact token calculator for OpenAI text, and a character-based token estimator for every other provider — then it converts either figure into an AI cost estimate.</p>
       </details>
     </div>
   </section>
@@ -305,7 +532,7 @@
   <div class="wrap">
     <div class="footer-grid" id="footerGrid"></div>
     <div class="footer-bottom">
-      <span>Prices are per 1M tokens, checked against official provider docs as of September 2026 — verify before relying on them for budgeting.</span>
+      <span>Prices are per 1M tokens, entered manually — verify before relying on them for budgeting.</span>
       <span>Runs entirely in your browser. Nothing you type is sent anywhere.</span>
     </div>
   </div>
@@ -315,9 +542,9 @@
 // =========================================================================
 // PRICING DATA — edit this to add models or update rates.
 // All figures are USD per 1,000,000 tokens.
-// Sourced from each provider's official pricing documentation, checked
-// September 2026. VERIFY AGAINST THE LIVE PRICING PAGE BEFORE PUBLISHING —
-// rates change frequently, especially for OpenAI, DeepSeek and Grok.
+// VERIFY EVERY NUMBER AGAINST THE PROVIDER'S OWN PRICING PAGE BEFORE
+// PUBLISHING — several entries below are reasonable placeholders, not
+// confirmed live rates.
 // =========================================================================
 const PRICING = {
   openai: {
@@ -325,11 +552,11 @@ const PRICING = {
     initials: "AI",
     tokenizer: "exact",
     models: [
-      { id:"gpt-5.5",       name:"GPT-5.5",          input:5.00, cachedInput:0.50,  output:30.00, ctx:"1M" },
-      { id:"gpt-4.1",       name:"GPT-4.1",          input:2.00, cachedInput:0.50,  output:8.00,  ctx:"1M" },
-      { id:"gpt-5.4-mini",  name:"GPT-5.4 Mini",     input:0.75, cachedInput:0.075, output:4.50,  ctx:"1M" },
-      { id:"gpt-4o-mini",   name:"GPT-4o Mini",      input:0.15, cachedInput:0.075, output:0.60,  ctx:"128K" },
-      { id:"gpt-5.4-nano",  name:"GPT-5.4 Nano",     input:0.20, cachedInput:0.02,  output:1.25,  ctx:"1M" }
+      { id:"gpt-5.6-sol",   name:"GPT-5.6 Sol",     input:5.00, cachedInput:0.50, output:30.00, ctx:"1.05M" },
+      { id:"gpt-4.1",       name:"GPT-4.1",         input:2.00, cachedInput:0.50, output:8.00,  ctx:"1M" },
+      { id:"gpt-4.1-mini",  name:"GPT-4.1 Mini",    input:0.40, cachedInput:0.10, output:1.60,  ctx:"1M" },
+      { id:"gpt-4o-mini",   name:"GPT-4o Mini",     input:0.15, cachedInput:0.075,output:0.60,  ctx:"128K" },
+      { id:"gpt-5-nano",    name:"GPT-5 Nano",      input:0.05, cachedInput:0.005,output:0.40,  ctx:"400K" }
     ]
   },
   anthropic: {
@@ -337,10 +564,10 @@ const PRICING = {
     initials: "AN",
     tokenizer: "estimate",
     models: [
-      { id:"claude-fable-5.1",  name:"Claude Fable 5.1",  input:10.00, cachedInput:1.00, output:50.00, ctx:"1M" },
-      { id:"claude-opus-5",     name:"Claude Opus 5",     input:5.00,  cachedInput:0.50, output:25.00, ctx:"1M (beta)" },
-      { id:"claude-sonnet-5",   name:"Claude Sonnet 5",   input:3.00,  cachedInput:0.30, output:15.00, ctx:"1M (beta)" },
-      { id:"claude-haiku-4.5",  name:"Claude Haiku 4.5",  input:1.00,  cachedInput:0.10, output:5.00,  ctx:"200K" }
+      { id:"claude-fable-5",  name:"Claude Fable 5",   input:10.00, cachedInput:null, output:50.00, ctx:"1M" },
+      { id:"claude-opus-5",   name:"Claude Opus 5",    input:5.00,  cachedInput:0.50, output:25.00, ctx:"500K" },
+      { id:"claude-sonnet-5", name:"Claude Sonnet 5",  input:3.00,  cachedInput:0.30, output:15.00, ctx:"500K" },
+      { id:"claude-haiku-4.5",name:"Claude Haiku 4.5", input:0.80,  cachedInput:0.08, output:4.00,  ctx:"200K" }
     ]
   },
   gemini: {
@@ -348,10 +575,10 @@ const PRICING = {
     initials: "GG",
     tokenizer: "estimate",
     models: [
-      { id:"gemini-3.5-flash",     name:"Gemini 3.5 Flash",         input:1.50, cachedInput:0.15,  output:9.00,  ctx:"1M" },
-      { id:"gemini-3.1-pro",       name:"Gemini 3.1 Pro (≤200K)",   input:2.00, cachedInput:0.20,  output:12.00, ctx:"1M" },
-      { id:"gemini-2.5-flash",     name:"Gemini 2.5 Flash",         input:0.30, cachedInput:0.03,  output:2.50,  ctx:"1M" },
-      { id:"gemini-2.5-flash-lite",name:"Gemini 2.5 Flash-Lite",    input:0.10, cachedInput:0.01,  output:0.40,  ctx:"1M" }
+      { id:"gemini-3.7-flash", name:"Gemini 3.7 Flash",       input:0.75, cachedInput:0.075, output:3.75,  ctx:"1M" },
+      { id:"gemini-2.5-pro",   name:"Gemini 2.5 Pro (≤200K)", input:1.25, cachedInput:0.31,  output:10.00, ctx:"200K" },
+      { id:"gemini-2.5-flash", name:"Gemini 2.5 Flash",       input:0.30, cachedInput:0.075, output:2.50,  ctx:"1M" },
+      { id:"gemini-2.0-flash", name:"Gemini 2.0 Flash",       input:0.10, cachedInput:0.025, output:0.40,  ctx:"1M" }
     ]
   },
   perplexity: {
@@ -371,9 +598,9 @@ const PRICING = {
     tokenizer: "estimate",
     models: [
       { id:"v4-flash-offpeak", name:"V4 Flash (off-peak)", input:0.22, cachedInput:0.007, output:0.66, ctx:"1M" },
-      { id:"v4-pro-offpeak",   name:"V4 Pro (off-peak)",   input:0.66, cachedInput:0.022, output:1.98, ctx:"1M" },
+      { id:"v4-pro-offpeak",   name:"V4 Pro (off-peak)",   input:0.55, cachedInput:0.14,  output:2.19, ctx:"1M" },
       { id:"v4-flash-peak",    name:"V4 Flash (peak)",     input:0.44, cachedInput:0.014, output:1.32, ctx:"1M" },
-      { id:"v4-pro-peak",      name:"V4 Pro (peak)",       input:1.32, cachedInput:0.044, output:3.96, ctx:"1M" }
+      { id:"v4-pro-peak",      name:"V4 Pro (peak)",       input:1.10, cachedInput:0.28,  output:4.38, ctx:"1M" }
     ]
   },
   grok: {
@@ -381,10 +608,10 @@ const PRICING = {
     initials: "GK",
     tokenizer: "estimate",
     models: [
-      { id:"grok-4.6",        name:"Grok 4.6",              input:2.00, cachedInput:0.40, output:6.00, ctx:"500K" },
-      { id:"grok-4.3",        name:"Grok 4.3",              input:1.25, cachedInput:0.20, output:2.50, ctx:"1M" },
-      { id:"grok-build-0.1",  name:"Grok Build 0.1 (code)", input:1.00, cachedInput:0.20, output:2.00, ctx:"256K" },
-      { id:"grok-4.20",       name:"Grok 4.20 (multi-agent)",input:1.25, cachedInput:0.20, output:2.50, ctx:"2M" }
+      { id:"grok-4.6",       name:"Grok 4.6",             input:2.00, cachedInput:0.50, output:6.00, ctx:"<200K" },
+      { id:"grok-4.6-long",  name:"Grok 4.6 (≥200K ctx)", input:4.00, cachedInput:1.00, output:12.00,ctx:"≥200K" },
+      { id:"grok-build",     name:"Grok Build 0.1",       input:3.00, cachedInput:0.75, output:9.00, ctx:"<200K" },
+      { id:"grok-4.3",       name:"Grok 4.3",             input:2.00, cachedInput:0.50, output:6.00, ctx:"<200K" }
     ]
   }
 };
@@ -431,7 +658,6 @@ function exactOpenAITokens(text){
 let currentInputTokens = 0;
 let currentOutputTokens = 0;
 let activeRatio = PRESET_DEFAULT_RATIO;
-let lastRawText = '';
 const selectedModel = {}; // providerKey -> model id
 
 Object.keys(PRICING).forEach(key => {
@@ -446,13 +672,12 @@ const providerGrid = document.getElementById('providerGrid');
 Object.entries(PRICING).forEach(([key, provider]) => {
   const card = document.createElement('div');
   card.className = 'provider-card';
-  card.dataset.provider = key;
   card.innerHTML = `
     <div class="provider-head">
       <h3>${provider.label}</h3>
       <div class="provider-badge">${provider.initials}</div>
     </div>
-    <select class="model-select" aria-label="${provider.label} model">
+    <select class="model-select" data-provider="${key}" aria-label="${provider.label} model">
       ${provider.models.map(m => `<option value="${m.id}">${m.name}</option>`).join('')}
     </select>
     <div class="cost-grid">
@@ -479,17 +704,17 @@ Object.entries(PRICING).forEach(([key, provider]) => {
   });
 });
 
-function estimateTokensFromInput(){
-  return estimateTokens(lastRawText);
+function tokensForProvider(providerKey){
+  return providerKey === 'openai' ? currentInputTokens : Math.ceil(currentInputTokens * (estimateTokens('a')===0?1:1));
 }
 
 function renderCosts(){
   document.querySelectorAll('.provider-card').forEach(card => {
-    const key = card.dataset.provider;
+    const key = card.querySelector('select').dataset.provider;
     const provider = PRICING[key];
     const model = provider.models.find(m => m.id === selectedModel[key]) || provider.models[0];
 
-    // Token basis: exact OpenAI count for the OpenAI card, char-based estimate for the rest.
+    // token basis: exact OpenAI count for openai cards, estimate for the rest
     const inputToks = key === 'openai' ? currentInputTokens : estimateTokensFromInput();
     const outputToks = key === 'openai' ? currentOutputTokens : Math.ceil(estimateTokensFromInput() * activeRatio);
 
@@ -503,6 +728,11 @@ function renderCosts(){
     card.querySelector('[data-role="meta"]').textContent =
       `${model.ctx} context · ${provider.tokenizer === 'exact' ? 'exact token count' : 'estimated token count'}`;
   });
+}
+
+let lastRawText = '';
+function estimateTokensFromInput(){
+  return estimateTokens(lastRawText);
 }
 
 function formatMoney(n){
@@ -568,14 +798,6 @@ function recalculate(){
 // Pricing table (generated from PRICING)
 // -------------------------------------------------------------------------
 const ratesBody = document.getElementById('ratesBody');
-
-function formatRate(n){
-  // Show 2 decimals normally; drop to 3 only when 2 decimals would round to $0.00 or lose the cache-tier price.
-  if(n < 0.01 && n > 0) return n.toFixed(4).replace(/0+$/,'').replace(/\.$/,'');
-  if(n < 0.1) return n.toFixed(3).replace(/0+$/,'').replace(/\.$/,'').padEnd(n.toFixed(3).indexOf('.') + 2, '0');
-  return n.toFixed(2);
-}
-
 Object.values(PRICING).forEach(provider => {
   provider.models.forEach((m, i) => {
     const tr = document.createElement('tr');
@@ -583,8 +805,8 @@ Object.values(PRICING).forEach(provider => {
       <td>${i === 0 ? `<span class="provider-group-label">${provider.label}</span>` : ''}</td>
       <td>${m.name}</td>
       <td>${m.ctx}</td>
-      <td class="num">$${formatRate(m.input)}</td>
-      <td class="num">${m.cachedInput != null ? '$' + formatRate(m.cachedInput) : '—'}</td>
+      <td class="num">$${m.input.toFixed(2)}</td>
+      <td class="num">${m.cachedInput != null ? '$' + m.cachedInput.toFixed(3) : '—'}</td>
       <td class="num">$${m.output.toFixed(2)}</td>
     `;
     ratesBody.appendChild(tr);
@@ -592,7 +814,7 @@ Object.values(PRICING).forEach(provider => {
 });
 
 // -------------------------------------------------------------------------
-// Footer (generated from PRICING, every model per provider)
+// Footer (generated from PRICING, flagship model per provider)
 // -------------------------------------------------------------------------
 const footerGrid = document.getElementById('footerGrid');
 Object.values(PRICING).forEach(provider => {
