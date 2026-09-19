@@ -27,10 +27,3 @@ sitemap.xml
 
 Each HTML file is self-contained (CSS + JS inline) — no build tooling required. Deployed as-is on GitHub Pages.
 
-## Updating pricing
-
-All rates live in the `PRICING` object near the top of the `<script>` tag in each HTML file (per 1M tokens, USD). Update there — the provider cards, rates table, and footer are all generated from it automatically.
-
-## Local development
-
-Just open `index.html` in a browser. No server or build step needed.
